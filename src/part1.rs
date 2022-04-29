@@ -24,16 +24,15 @@
 */
 
 pub fn double_v1(n: i32) -> i32 {
-    unimplemented!()
+    n + n
 }
 
 pub fn double_v2(n: &i32) -> i32 {
-    unimplemented!()
+    *n + *n
 }
 
 pub fn double_v3(n: &mut i32) {
-    // double n in place
-    unimplemented!()
+    *n = *n + *n;
 }
 
 // Example unit test (so you can recall the syntax)
@@ -42,12 +41,22 @@ fn test_double_v1() {
     assert_eq!(double_v1(2), 4);
     assert_eq!(double_v1(-3), -6);
 }
-// #[test]
-// fn test_double_v2() {
-// }
-// #[test]
-// fn test_double_v3() {
-// }
+#[test]
+fn test_double_v2() {
+    assert_eq!(double_v2(&2), 4);
+    assert_eq!(double_v2(&-3), -6);
+}
+
+#[test]
+fn test_double_v3() {
+    let mut n = 2;
+    double_v3(&mut n);
+    assert_eq!(n, 4);
+
+    n = -3;
+    double_v3(&mut n);
+    assert_eq!(n, -6)
+}
 
 /*
     Problem 2: Integer square root
@@ -57,10 +66,26 @@ fn test_double_v1() {
     efficiently than trying every possibility.
 */
 pub fn sqrt(n: usize) -> usize {
-    unimplemented!()
+    let half: usize = n / 2;
+
+    for m in (1..half).rev() {
+        if m * m <= n {
+            return m;
+        }
+    }
+
+    1
 }
 
 // Remember to write unit tests here (and on all future functions)
+#[test]
+fn test_sqrt() {
+    assert_eq!(sqrt(9), 3);
+    assert_eq!(sqrt(17), 4);
+    assert_eq!(sqrt(3), 1);
+    assert_eq!(sqrt(2), 1);
+    assert_eq!(sqrt(1), 1);
+}
 
 /*
     Problem 3: Slice sum
@@ -75,18 +100,46 @@ pub fn sqrt(n: usize) -> usize {
 */
 pub fn sum_v1(slice: &[i32]) -> i32 {
     // do some initialization...
+    let mut sum: i32 = 0;
+
     for &v in slice {
+        sum += v;
         // ...
     }
-    unimplemented!()
+    sum
 }
 
 pub fn sum_v2(slice: &[i32]) -> i32 {
     // do some initialization...
-    for v in slice {
-        // ...
+    let mut sum: i32 = 0;
+
+    {
+        let result = match slice.into_iter() {
+            mut iter => loop {
+                let next;
+                match iter.next() {
+                    Some(val) => next = val,
+                    None => break,
+                };
+                sum += next;
+            },
+        };
+        result
     }
-    unimplemented!()
+
+    sum
+}
+
+#[test]
+fn test_sum_v1() {
+    let slice = &[1, 2, 3];
+    assert_eq!(sum_v1(slice), 6);
+}
+
+#[test]
+fn test_sum_v2() {
+    let slice = &[1, 2, 3];
+    assert_eq!(sum_v2(slice), 6);
 }
 
 /*
@@ -98,7 +151,22 @@ pub fn sum_v2(slice: &[i32]) -> i32 {
 */
 
 pub fn unique(slice: &[i32]) -> Vec<i32> {
-    unimplemented!()
+    let mut new_vec = Vec::new();
+
+    for &i in slice {
+        if !new_vec.contains(&i) {
+            new_vec.push(i);
+        }
+    }
+
+    new_vec
+}
+
+#[test]
+fn test_unique() {
+    let slice = &[1, 2, 2, 3, 3, 3];
+    let answer_slice = &[1, 2, 3];
+    assert_eq!(unique(slice), answer_slice);
 }
 
 /*
@@ -109,7 +177,14 @@ pub fn unique(slice: &[i32]) -> Vec<i32> {
     to know is that pred is a function from i32 to bool.
 */
 pub fn filter(slice: &[i32], pred: impl Fn(i32) -> bool) -> Vec<i32> {
-    unimplemented!()
+    let mut new_vec = Vec::new();
+    for &i in slice {
+        if pred(i) {
+            new_vec.push(i);
+        }
+    }
+
+    new_vec
 }
 
 #[test]
