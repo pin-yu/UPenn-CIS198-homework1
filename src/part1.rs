@@ -203,7 +203,24 @@ fn test_filter() {
     where v[i] is the ith fibonacci number.
 */
 pub fn fibonacci(n1: i32, n2: i32, out_size: usize) -> Vec<i32> {
-    unimplemented!()
+    let mut new_vec = Vec::new();
+
+    new_vec.push(n1);
+    new_vec.push(n2);
+
+    for i in 2..out_size {
+        let tmp = new_vec[i - 1] + new_vec[i - 2];
+        new_vec.push(tmp);
+    }
+
+    new_vec
+}
+
+#[test]
+fn test_fibonacci() {
+    let answer_slice1 = vec![1, 2, 3, 5, 8, 13];
+
+    assert_eq!(fibonacci(1, 2, 6), answer_slice1);
 }
 
 /*
