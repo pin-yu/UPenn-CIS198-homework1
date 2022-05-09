@@ -112,19 +112,10 @@ pub fn sum_v1(slice: &[i32]) -> i32 {
 pub fn sum_v2(slice: &[i32]) -> i32 {
     // do some initialization...
     let mut sum: i32 = 0;
+    let mut slice_iter = slice.iter();
 
-    {
-        let result = match slice.into_iter() {
-            mut iter => loop {
-                let next;
-                match iter.next() {
-                    Some(val) => next = val,
-                    None => break,
-                };
-                sum += next;
-            },
-        };
-        result
+    while let Some(val) = slice_iter.next() {
+        sum += val;
     }
 
     sum
@@ -203,10 +194,7 @@ fn test_filter() {
     where v[i] is the ith fibonacci number.
 */
 pub fn fibonacci(n1: i32, n2: i32, out_size: usize) -> Vec<i32> {
-    let mut new_vec = Vec::new();
-
-    new_vec.push(n1);
-    new_vec.push(n2);
+    let mut new_vec = vec![n1, n2];
 
     for i in 2..out_size {
         let tmp = new_vec[i - 1] + new_vec[i - 2];
@@ -234,11 +222,24 @@ fn test_fibonacci() {
     What are some reasons the second function is not efficient?
 */
 pub fn str_concat(s1: &str, s2: &str) -> String {
-    unimplemented!()
+    s1.to_string() + s2
+}
+
+#[test]
+fn test_str_concat() {
+    assert_eq!(str_concat("test", "123"), "test123");
 }
 
 pub fn string_concat(s1: String, s2: String) -> String {
-    unimplemented!()
+    s1 + &s2
+}
+
+#[test]
+fn test_string_concat() {
+    let a = String::from("test");
+    let b = String::from("123");
+    let ans = String::from("test123");
+    assert_eq!(string_concat(a, b), ans);
 }
 
 /*
@@ -249,7 +250,19 @@ pub fn string_concat(s1: String, s2: String) -> String {
 */
 
 pub fn concat_all(v: Vec<String>) -> String {
-    unimplemented!()
+    let mut new_str = String::new();
+    for s in v {
+        new_str = string_concat(new_str, s);
+    }
+
+    new_str
+}
+
+#[test]
+fn test_concat_all() {
+    let str_vec = vec![String::from("hello"), String::from("world")];
+
+    assert_eq!(concat_all(str_vec), String::from("helloworld"))
 }
 
 /*
