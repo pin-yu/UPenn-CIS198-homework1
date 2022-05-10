@@ -11,6 +11,7 @@
 // This will result in useful warnings if you missed something.
 #![allow(dead_code)]
 #![allow(unused_variables)]
+#![allow(clippy::while_let_on_iterator)]
 
 /*
     Problem 1: Double
@@ -280,11 +281,23 @@ fn test_concat_all() {
 */
 
 pub fn parse_all(v: Vec<String>) -> Vec<i32> {
-    unimplemented!()
+    let mut new_vec = Vec::new();
+
+    for s in v {
+        new_vec.push(s.parse::<i32>().unwrap());
+    }
+
+    new_vec
 }
 
 pub fn print_all(v: Vec<i32>) -> Vec<String> {
-    unimplemented!()
+    let mut new_vec = Vec::new();
+
+    for i in v {
+        new_vec.push(i.to_string());
+    }
+
+    new_vec
 }
 
 #[test]
@@ -311,7 +324,11 @@ fn test_parse_print() {
 */
 
 pub fn concat_even_fibonaccis(n: usize) -> String {
-    unimplemented!()
+    let mut fib_vec = fibonacci(1, 1, n);
+
+    fib_vec = filter(&fib_vec, &|n| n % 2 == 0);
+    let string_fib_vec = print_all(fib_vec);
+    concat_all(string_fib_vec)
 }
 
 #[test]
