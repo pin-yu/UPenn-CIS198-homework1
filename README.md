@@ -1,6 +1,6 @@
 # Homework 1: Introduction To Rust.
 
-## Complete Date
+## Completion Date
 2022/5/20
 
 ## Setup
